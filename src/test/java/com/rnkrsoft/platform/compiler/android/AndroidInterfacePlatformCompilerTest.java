@@ -22,8 +22,11 @@ public class AndroidInterfacePlatformCompilerTest {
         ctx.setDocScanner(docScanner);
         ctx.setOutputPath("./target");
         ctx.setOutputFileName("demo");
-        ctx.setBasePackage("com.rnkrsoft");
-        ctx.setBaseFilePath("");
+        ctx.setBasePackage("com.rnkrsoft.platform");
+        ctx.setServicePackage("com.rnkrsoft.platform.service");
+        ctx.setDomainsPackage("com.rnkrsoft.platform.domains");
+//        ctx.setBasePackage("com.rnkrsoft");
+//        ctx.setBaseFilePath("");
         ctx.setPackZip(true);
         compiler.compile(ctx);
         System.out.println(ctx.getFileFormats());

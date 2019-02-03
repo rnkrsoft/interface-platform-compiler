@@ -23,18 +23,18 @@ import java.util.Set;
  */
 public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompiler {
 
-    public void compile(CompileContext context) throws IOException{
+    public void compile(CompileContext context) throws IOException {
         DocScanner docScanner = context.getDocScanner();
         try {
             generate(context, docScanner.listService());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        if (context.isPackZip()){
+        if (context.isPackZip()) {
             OutputStream os = null;
             try {
                 File file = new File(context.getOutputPath(), context.getOutputFileName() + ".zip");
-                if (file.exists()){
+                if (file.exists()) {
                     file.delete();
                 }
                 os = new FileOutputStream(file);
@@ -70,23 +70,17 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
         if (context.getBasePackage() != null) {
             basePackage = context.getBasePackage();
         }
-        String domainsPackage = basePackage + ".domains";
-        String servicePackage = basePackage + ".facades";
-        String constantsPackage = basePackage + ".constants";
-        context.setDomainsPackage(domainsPackage);
-        context.setServicePackage(servicePackage);
-        context.setConstantsPackage(constantsPackage);
-        buf.put("UTF-8", "package ", servicePackage, ";\n");
+        buf.put("UTF-8", "package ", context.getServicePackage(), ";\n");
         buf.put("UTF-8", "\n");
         buf.put("UTF-8", "import ", ApidocService.class.getName(), ";", "\n");
         buf.put("UTF-8", "import ", ApidocInterface.class.getName(), ";", "\n");
         buf.put("UTF-8", "import ", AsyncHandler.class.getName(), ";", "\n");
         buf.put("UTF-8", "import ", "android.os.AsyncTask", ";", "\n");
         buf.put("UTF-8", "\n");
-        buf.put("UTF-8", "import ", domainsPackage, ".*;\n");
+        buf.put("UTF-8", "import ", context.getDomainsPackage(), ".*;\n");
         buf.put("UTF-8", "\n");
         buf.put("UTF-8", "/**\n");
-        buf.put("UTF-8", " * Created by interface platform generator \n");
+        buf.put("UTF-8", " * ", context.getCopyright(), " \n");
         buf.put("UTF-8", " */\n");
         buf.put("UTF-8", "@ApidocService(value = \"", serviceInfo.getDesc(), "\", channel = \"", serviceInfo.getChannel(), "\" )\n");
         buf.put("UTF-8", "public interface ", serviceInfo.getServiceClass().getSimpleName(), " {\n");
@@ -97,8 +91,8 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
         }
         buf.put("UTF-8", "}");
         InterfaceFileFormat fileFormat = new InterfaceFileFormat();
-        fileFormat.setFilePath(context.getBaseFilePath() + "/" + servicePackage.replaceAll("\\.", "/"));
-        fileFormat.setPackagePath(servicePackage);
+        fileFormat.setFilePath(context.getBaseFilePath() + "/" + context.getServiceFilePath());
+        fileFormat.setPackagePath(context.getServicePackage());
         fileFormat.setCode(buf.asString("UTF-8"));
         fileFormat.setFileSuffix("java");
         fileFormat.setFileName(serviceInfo.getServiceClass().getSimpleName());
@@ -121,7 +115,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
         buf.put("UTF-8", "import ", context.getDomainsPackage(), ".*;", "\n");
         buf.put("UTF-8", "\n");
         buf.put("UTF-8", "/**\n");
-        buf.put("UTF-8", " * Created by interface platform generator\n");
+        buf.put("UTF-8", " * ", context.getCopyright(), " \n");
         buf.put("UTF-8", " */\n");
         buf.put("UTF-8", "public class ", interfaceInfo.getRequestClass().getSimpleName(), (interfaceInfo.isPageable() ? " extends AbstractRequestPage" : " implements Serializable"), " {\n");
         for (ElementInfo column : interfaceInfo.getRequest().getElements()) {
@@ -179,7 +173,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
                 buf.put("UTF-8", "        return this.", beanElementInfo.getName(), ";\n");
                 buf.put("UTF-8", "    }\n");
                 buf.put("UTF-8", "\n");
-                buf.put("UTF-8", "    public ", "void ", "set", StringUtils.firstCharToUpper(beanElementInfo.getName()), "(", beanElementInfo.getJavaClass().getSimpleName(), " ", beanElementInfo.getName(), "){\n");
+                buf.put("UTF-8", "    public ", "void ", "set", StringUtils.firstCharToUpper(beanElementInfo.getName()), "(", beanElementInfo.getJavaClass().getSimpleName(), " ", beanElementInfo.getName(), ") {\n");
                 buf.put("UTF-8", "        this.", beanElementInfo.getName(), " = ", beanElementInfo.getName(), ";\n");
                 buf.put("UTF-8", "    }\n");
                 buf.put("UTF-8", "\n");
@@ -208,12 +202,6 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
                 generateFormObjectClass(context, formElementInfo);
             }
         }
-
-        for (ElementInfo column : interfaceInfo.getRequest().getAllElements()) {
-            if (column.isValue()) {
-                ValueElementInfo valueElementInfo = column.as(ValueElementInfo.class);
-            }
-        }
     }
 
     void generateValueObjectClass(CompileContext context, BeanElementInfo elementInfo) throws FileNotFoundException {
@@ -229,7 +217,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
         buf.put("UTF-8", "import ", context.getDomainsPackage(), ".*;", "\n");
         buf.put("UTF-8", "\n");
         buf.put("UTF-8", "/**\n");
-        buf.put("UTF-8", " * Created by interface platform generator\n");
+        buf.put("UTF-8", " * ", context.getCopyright(), " \n");
         buf.put("UTF-8", " */\n");
         buf.put("UTF-8", "public class ", elementInfo.getJavaClass().getSimpleName(), " implements Serializable", " {\n");
         for (ElementInfo column : elementInfo.getElements()) {
@@ -257,7 +245,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
                 buf.put("UTF-8", "\n");
             } else if (column.isForm()) {
                 FormElementInfo formElementInfo = column.as(FormElementInfo.class);
-                buf.put("UTF-8", "    @ApidocElement(value = \"" + formElementInfo.getDesc() + "\" , required = " + formElementInfo.isRequired() + ")", "\n");
+                buf.put("UTF-8", "    @ApidocElement(value = \"" + formElementInfo.getDesc() + "\", required = " + formElementInfo.isRequired() + ")", "\n");
                 buf.put("UTF-8", "    final ", formElementInfo.getJavaClass().getSimpleName(), "<", formElementInfo.getBeanClass().getSimpleName(), ">", " ", formElementInfo.getName(), " = new ArrayList();\n");
                 buf.put("UTF-8", "\n");
             }
@@ -287,7 +275,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
                 buf.put("UTF-8", "        return this.", beanElementInfo.getName(), ";\n");
                 buf.put("UTF-8", "    }\n");
                 buf.put("UTF-8", "\n");
-                buf.put("UTF-8", "    public ", "void ", "set", StringUtils.firstCharToUpper(beanElementInfo.getName()), "(", beanElementInfo.getJavaClass().getSimpleName(), " ", beanElementInfo.getName(), "){\n");
+                buf.put("UTF-8", "    public ", "void ", "set", StringUtils.firstCharToUpper(beanElementInfo.getName()), "(", beanElementInfo.getJavaClass().getSimpleName(), " ", beanElementInfo.getName(), ") {\n");
                 buf.put("UTF-8", "        this.", beanElementInfo.getName(), " = ", beanElementInfo.getName(), ";\n");
                 buf.put("UTF-8", "    }\n");
                 buf.put("UTF-8", "\n");
@@ -331,7 +319,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
         buf.put("UTF-8", "import ", context.getDomainsPackage(), ".*;", "\n");
         buf.put("UTF-8", "\n");
         buf.put("UTF-8", "/**\n");
-        buf.put("UTF-8", " * Created by interface platform generator\n");
+        buf.put("UTF-8", " * ", context.getCopyright(), " \n");
         buf.put("UTF-8", " */\n");
         buf.put("UTF-8", "public class ", elementInfo.getBeanClass().getSimpleName(), " implements Serializable", " {\n");
         for (ElementInfo column : elementInfo.getElements()) {
@@ -389,7 +377,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
                 buf.put("UTF-8", "    ", "    return this.", beanElementInfo.getName(), ";\n");
                 buf.put("UTF-8", "    ", "}\n");
                 buf.put("UTF-8", "\n");
-                buf.put("UTF-8", "    ", "public ", "void ", "set", StringUtils.firstCharToUpper(beanElementInfo.getName()), "(", beanElementInfo.getJavaClass().getSimpleName(), " ", beanElementInfo.getName(), "){\n");
+                buf.put("UTF-8", "    ", "public ", "void ", "set", StringUtils.firstCharToUpper(beanElementInfo.getName()), "(", beanElementInfo.getJavaClass().getSimpleName(), " ", beanElementInfo.getName(), ") {\n");
                 buf.put("UTF-8", "    ", "    this.", beanElementInfo.getName(), " = ", beanElementInfo.getName(), ";\n");
                 buf.put("UTF-8", "    ", "}\n");
                 buf.put("UTF-8", "\n");
@@ -438,7 +426,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
         buf.put("UTF-8", "import ", context.getDomainsPackage(), ".*;", "\n");
         buf.put("UTF-8", "\n");
         buf.put("UTF-8", "/**\n");
-        buf.put("UTF-8", " * Created by interface platform generator\n");
+        buf.put("UTF-8", " * ", context.getCopyright(), " \n");
         buf.put("UTF-8", " */\n");
         Class recordsJavaClass = null;
         for (ElementInfo column : interfaceInfo.getResponse().getAllElements()) {
@@ -478,7 +466,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
                     continue;
                 }
                 FormElementInfo formElementInfo = column.as(FormElementInfo.class);
-                buf.put("UTF-8", "    ", "@ApidocElement(value = \"" + formElementInfo.getDesc() + "\" , required = " + formElementInfo.isRequired() + ")", "\n");
+                buf.put("UTF-8", "    ", "@ApidocElement(value = \"" + formElementInfo.getDesc() + "\", required = " + formElementInfo.isRequired() + ")", "\n");
                 buf.put("UTF-8", "    ", "final ", formElementInfo.getJavaClass().getSimpleName(), "<", formElementInfo.getBeanClass().getSimpleName(), ">", " ", formElementInfo.getName(), " = new ArrayList();\n");
                 buf.put("UTF-8", "\n");
             }
@@ -538,11 +526,6 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
             } else if (column.isForm()) {
                 FormElementInfo formElementInfo = column.as(FormElementInfo.class);
                 generateFormObjectClass(context, formElementInfo);
-            }
-        }
-        for (ElementInfo column : interfaceInfo.getRequest().getAllElements()) {
-            if (column.isValue()) {
-                ValueElementInfo valueElementInfo = column.as(ValueElementInfo.class);
             }
         }
     }
