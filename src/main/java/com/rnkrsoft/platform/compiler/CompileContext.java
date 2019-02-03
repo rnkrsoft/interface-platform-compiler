@@ -48,27 +48,30 @@ public class CompileContext {
      */
     String basePackage = "com.rnkrsoft.platform";
     /**
-     * 文件保存路径
-     */
-    String baseFilePath = "";
-    /**
      * domain包路径
      */
-    String domainsPackage = "com.rnkrsoft.platform.domain";
+    String domainsName = "domain";
     /**
      * 服务类包路径
      */
-    String servicePackage = "com.rnkrsoft.platform.service";
+    String serviceName = "service";
+    public String getDomainsPackage() {
+        return basePackage + "." + domainsName;
+    }
+
+    public String getServicePackage() {
+        return basePackage + "." + serviceName;
+    }
 
     /**
      * domain文件路径
      */
     public String getDomainsFilePath() {
-        return domainsPackage.replaceAll("\\.", "/");
+        return getDomainsPackage().replaceAll("\\.", "/");
     }
 
     public String getServiceFilePath() {
-        return servicePackage.replaceAll("\\.", "/");
+        return getServicePackage().replaceAll("\\.", "/");
     }
 
     /**

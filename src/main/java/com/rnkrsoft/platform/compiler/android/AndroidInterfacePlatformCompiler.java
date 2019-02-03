@@ -68,7 +68,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
         int lastDotIdx1 = packageName.lastIndexOf(".");
         String basePackage = packageName.substring(0, lastDotIdx1);
         if (context.getBasePackage() != null) {
-            basePackage = context.getBasePackage();
+            context.setBasePackage(basePackage);
         }
         buf.put("UTF-8", "package ", context.getServicePackage(), ";\n");
         buf.put("UTF-8", "\n");
@@ -91,7 +91,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
         }
         buf.put("UTF-8", "}");
         InterfaceFileFormat fileFormat = new InterfaceFileFormat();
-        fileFormat.setFilePath(context.getBaseFilePath() + "/" + context.getServiceFilePath());
+        fileFormat.setFilePath(context.getServiceFilePath());
         fileFormat.setPackagePath(context.getServicePackage());
         fileFormat.setCode(buf.asString("UTF-8"));
         fileFormat.setFileSuffix("java");
@@ -187,7 +187,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
         }
         buf.put("UTF-8", "}");
         InterfaceFileFormat fileFormat = new InterfaceFileFormat();
-        fileFormat.setFilePath(context.getBaseFilePath() + "/" + context.getDomainsPackage().replaceAll("\\.", "/"));
+        fileFormat.setFilePath(context.getDomainsFilePath());
         fileFormat.setPackagePath(context.getDomainsPackage());
         fileFormat.setCode(buf.asString("UTF-8"));
         fileFormat.setFileSuffix("java");
@@ -289,7 +289,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
         }
         buf.put("UTF-8", "}\n");
         InterfaceFileFormat fileFormat = new InterfaceFileFormat();
-        fileFormat.setFilePath(context.getBaseFilePath() + "/" + context.getDomainsPackage().replaceAll("\\.", "/"));
+        fileFormat.setFilePath(context.getDomainsFilePath());
         fileFormat.setPackagePath(context.getDomainsPackage());
         fileFormat.setCode(buf.asString("UTF-8"));
         fileFormat.setFileSuffix("java");
@@ -391,7 +391,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
         }
         buf.put("UTF-8", "}");
         InterfaceFileFormat fileFormat = new InterfaceFileFormat();
-        fileFormat.setFilePath(context.getBaseFilePath() + "/" + context.getDomainsPackage().replaceAll("\\.", "/"));
+        fileFormat.setFilePath(context.getDomainsFilePath());
         fileFormat.setPackagePath(context.getDomainsPackage());
         fileFormat.setCode(buf.asString("UTF-8"));
         fileFormat.setFileSuffix("java");
@@ -513,7 +513,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
         }
         buf.put("UTF-8", "}");
         InterfaceFileFormat fileFormat = new InterfaceFileFormat();
-        fileFormat.setFilePath(context.getBaseFilePath() + "/" + context.getDomainsPackage().replaceAll("\\.", "/"));
+        fileFormat.setFilePath(context.getDomainsFilePath());
         fileFormat.setPackagePath(context.getDomainsPackage());
         fileFormat.setCode(buf.asString("UTF-8"));
         fileFormat.setFileSuffix("java");
