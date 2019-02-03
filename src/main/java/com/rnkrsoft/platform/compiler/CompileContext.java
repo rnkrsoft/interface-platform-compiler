@@ -14,57 +14,54 @@ import java.util.List;
 @Data
 public class CompileContext {
     /**
-     * °æÈ¨ÉêÃ÷
+     * ç‰ˆæƒç”³æ˜
      */
     String copyright = "copyright rnkrsoft.com";
     /**
-     * Êä³öÎÄ¼şÂ·¾¶
+     * è¾“å‡ºæ–‡ä»¶è·¯å¾„
      */
     String outputPath = "";
     /**
-     * Êä³öÎÄ¼şÃû
+     * è¾“å‡ºæ–‡ä»¶å
      */
     String outputFileName = "gen";
     /**
-     * Ä¿±ê°üÂ·¾¶
+     * ç›®æ ‡åŒ…è·¯å¾„
      */
     String targetPackage = "com.rnkrsoft.platform";
     /**
-     * ½Ó¿ÚĞÅÏ¢¶ÔÏó
+     * æ¥å£ä¿¡æ¯å¯¹è±¡
      */
     InterfaceInfo interfaceInfo;
 
     int valueObjectNestingDeep = 0;
     /**
-     * ÎÄµµÉ¨ÃèÆ÷
+     * æ–‡æ¡£æ‰«æå™¨
      */
     DocScanner docScanner;
     /**
-     * ÊÇ·ñ´ò°ü³ÉZip°ü
+     * æ˜¯å¦æ‰“åŒ…æˆZipåŒ…
      */
     boolean packZip = true;
     /**
-     * ±£´æµÄ°üÂ·¾¶
-     */
-    String basePackage = "com.rnkrsoft.platform";
-    /**
-     * domain°üÂ·¾¶
+     * domainåŒ…è·¯å¾„
      */
     String domainsName = "domain";
     /**
-     * ·şÎñÀà°üÂ·¾¶
+     * æœåŠ¡ç±»åŒ…è·¯å¾„
      */
     String serviceName = "service";
+
     public String getDomainsPackage() {
-        return basePackage + "." + domainsName;
+        return targetPackage + "." + domainsName;
     }
 
     public String getServicePackage() {
-        return basePackage + "." + serviceName;
+        return targetPackage + "." + serviceName;
     }
 
     /**
-     * domainÎÄ¼şÂ·¾¶
+     * domainæ–‡ä»¶è·¯å¾„
      */
     public String getDomainsFilePath() {
         return getDomainsPackage().replaceAll("\\.", "/");
@@ -75,14 +72,14 @@ public class CompileContext {
     }
 
     /**
-     * ËùÓĞµÄ½Ó¿ÚÎÄ¼ş¸ñÊ½
+     * æ‰€æœ‰çš„æ¥å£æ–‡ä»¶æ ¼å¼
      */
     private final List<InterfaceFileFormat> fileFormats = new ArrayList();
 
     /**
-     * Ôö¼ÓÒ»¸ö½Ó¿ÚÎÄ¼ş
+     * å¢åŠ ä¸€ä¸ªæ¥å£æ–‡ä»¶
      *
-     * @param fileFormat ÎÄ¼ş¸ñÊ½
+     * @param fileFormat æ–‡ä»¶æ ¼å¼
      */
     public void addInterfaceFile(InterfaceFileFormat fileFormat) {
         this.fileFormats.add(fileFormat);
@@ -90,8 +87,8 @@ public class CompileContext {
 
     public CompileContext increaseDeep() {
         valueObjectNestingDeep++;
-        if (valueObjectNestingDeep > 4) {
-            throw new UnsupportedOperationException("²»Ö§³ÖµÄÎÄ¼şÇ¶Ì×Éî¶È" + valueObjectNestingDeep);
+        if (valueObjectNestingDeep > 10) {
+            throw new UnsupportedOperationException("ä¸æ”¯æŒçš„æ–‡ä»¶åµŒå¥—æ·±åº¦" + valueObjectNestingDeep);
         }
         return this;
     }
@@ -99,5 +96,13 @@ public class CompileContext {
     public CompileContext decreaseDeep() {
         valueObjectNestingDeep--;
         return this;
+    }
+
+    public String getIndent(){
+        StringBuilder buffer = new StringBuilder();
+        for (int i = 0; i < valueObjectNestingDeep; i++) {
+            buffer.append("    ");
+        }
+        return buffer.toString();
     }
 }
