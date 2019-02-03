@@ -1,12 +1,14 @@
 package com.rnkrsoft.platform.compiler;
 
+import java.io.IOException;
+
 /**
  * Created by rnkrsoft.com on 2019/2/2.
  */
 public interface InterfacePlatformCompiler {
     /**
-     * ½øĞĞ½Ó¿Ú±àÒë
-     * @param ctx ÉÏÏÂÎÄ
+     * è¿›è¡Œæ¥å£ç¼–è¯‘
+     * @param ctx ä¸Šä¸‹æ–‡
      */
-    void compile(CompileContext ctx);
+    void compile(CompileContext ctx) throws IOException;
 }
