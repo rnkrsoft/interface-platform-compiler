@@ -53,11 +53,11 @@ public class CompileContext {
     String serviceName = "service";
 
     public String getDomainsPackage() {
-        return targetPackage + "." + domainsName;
+        return targetPackage + domainsName;
     }
 
     public String getServicePackage() {
-        return targetPackage + "." + serviceName;
+        return targetPackage + serviceName;
     }
 
     /**

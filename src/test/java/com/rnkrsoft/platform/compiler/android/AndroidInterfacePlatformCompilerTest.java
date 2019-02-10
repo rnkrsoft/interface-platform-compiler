@@ -22,7 +22,7 @@ public class AndroidInterfacePlatformCompilerTest {
         ctx.setDocScanner(docScanner);
         ctx.setOutputPath("./target");
         ctx.setOutputFileName("android");
-        ctx.setTargetPackage("com.rnkrsoft.demo");
+        ctx.setTargetPackage("com.rnkrsoft.demo.");
         ctx.setServiceName("service");
         ctx.setDomainsName("domains");
 //        ctx.setBasePackage("com.rnkrsoft");

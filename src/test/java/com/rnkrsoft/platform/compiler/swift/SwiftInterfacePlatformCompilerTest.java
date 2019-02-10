@@ -1,9 +1,10 @@
-package com.rnkrsoft.platform.compiler.java;
+package com.rnkrsoft.platform.compiler.swift;
 
 import com.rnkrsoft.platform.compiler.CompileContext;
 import com.rnkrsoft.platform.compiler.InterfacePlatformCompiler;
 import com.rnkrsoft.platform.compiler.InterfaceScanner;
-import com.rnkrsoft.platform.compiler.android.AndroidInterfacePlatformCompiler;
+import com.rnkrsoft.platform.compiler.java.JavaInterfacePlatformCompiler;
+import com.rnkrsoft.utils.StringUtils;
 import org.junit.Test;
 
 import javax.web.doc.DocScanner;
@@ -11,19 +12,19 @@ import javax.web.doc.DocScanner;
 import static org.junit.Assert.*;
 
 /**
- * Created by wing4j on 2019/2/3.
+ * Created by wing4j on 2019/2/10.
  */
-public class JavaInterfacePlatformCompilerTest {
+public class SwiftInterfacePlatformCompilerTest {
 
     @Test
     public void testCompile() throws Exception {
         DocScanner docScanner = InterfaceScanner.scan("com.rnkrsoft.platform.service");
-        InterfacePlatformCompiler compiler = new JavaInterfacePlatformCompiler();
+        InterfacePlatformCompiler compiler = new SwiftInterfacePlatformCompiler();
         CompileContext ctx = new CompileContext();
         ctx.setDocScanner(docScanner);
         ctx.setOutputPath("./target");
-        ctx.setOutputFileName("java");
-        ctx.setTargetPackage("com.rnkrsoft.demo.");
+        ctx.setOutputFileName("swift");
+        ctx.setTargetPackage(StringUtils.shortPackageName("com.rnkrsoft.demo", 3, true, ""));
         ctx.setServiceName("service");
         ctx.setDomainsName("domains");
 //        ctx.setBasePackage("com.rnkrsoft");
