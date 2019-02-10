@@ -1,25 +1,17 @@
-package com.rnkrsoft.platform.compiler.swift;
+package com.rnkrsoft.platform.compiler;
 
-import com.rnkrsoft.platform.compiler.CompileContext;
-import com.rnkrsoft.platform.compiler.InterfacePlatformCompiler;
-import com.rnkrsoft.platform.compiler.InterfaceScanner;
-import com.rnkrsoft.platform.compiler.java.JavaInterfacePlatformCompiler;
 import com.rnkrsoft.utils.StringUtils;
-import org.junit.Test;
 
 import javax.web.doc.DocScanner;
-
-import static org.junit.Assert.*;
+import java.io.IOException;
 
 /**
  * Created by rnkrsoft.com on 2019/2/10.
  */
-public class SwiftInterfacePlatformCompilerTest {
-
-    @Test
-    public void testCompile() throws Exception {
+public class Main {
+    public static void main(String[] args) throws IOException {
         DocScanner docScanner = InterfaceScanner.scan("com.rnkrsoft.platform.service");
-        InterfacePlatformCompiler compiler = new SwiftInterfacePlatformCompiler();
+        InterfacePlatformCompiler compiler = InterfacePlatformCompilerFactory.getInstance("swift");
         CompileContext ctx = new CompileContext();
         ctx.setDocScanner(docScanner);
         ctx.setOutputPath("./target");
@@ -31,6 +23,5 @@ public class SwiftInterfacePlatformCompilerTest {
 //        ctx.setBaseFilePath("");
         ctx.setPackZip(true);
         compiler.compile(ctx);
-        System.out.println(ctx.getFileFormats());
     }
 }

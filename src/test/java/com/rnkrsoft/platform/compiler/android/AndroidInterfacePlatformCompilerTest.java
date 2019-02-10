@@ -10,7 +10,7 @@ import javax.web.doc.DocScanner;
 import static org.junit.Assert.*;
 
 /**
- * Created by wing4j on 2019/2/3.
+ * Created by rnkrsoft.com on 2019/2/3.
  */
 public class AndroidInterfacePlatformCompilerTest {
 
