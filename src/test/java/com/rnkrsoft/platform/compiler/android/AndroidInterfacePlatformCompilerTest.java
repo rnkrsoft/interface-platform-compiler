@@ -21,7 +21,7 @@ public class AndroidInterfacePlatformCompilerTest {
         CompileContext ctx = new CompileContext();
         ctx.setDocScanner(docScanner);
         ctx.setOutputPath("./target");
-        ctx.setOutputFileName("demo");
+        ctx.setOutputFileName("android");
         ctx.setTargetPackage("com.rnkrsoft.demo");
         ctx.setServiceName("service");
         ctx.setDomainsName("domains");
