@@ -5,11 +5,16 @@
     <parent>
         <groupId>com.rnkrsoft.platform</groupId>
         <artifactId>interface-platform-compiler-parent</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>interface-platform-compiler-benchmark</artifactId>
-
-
+    <dependencies>
+        <dependency>
+            <groupId>com.rnkrsoft.platform</groupId>
+            <artifactId>interface-platform-protocol</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+    </dependencies>
 </project>

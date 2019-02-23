@@ -6,7 +6,7 @@
     <parent>
         <artifactId>interface-platform-compiler-parent</artifactId>
         <groupId>com.rnkrsoft.platform</groupId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.2</version>
     </parent>
 
     <artifactId>interface-platform-compiler-swift</artifactId>

@@ -6,7 +6,7 @@
     <groupId>com.rnkrsoft.platform</groupId>
     <artifactId>interface-platform-compiler-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2</version>
     <modules>
         <module>interface-platform-compiler-core</module>
         <module>interface-platform-compiler-benchmark</module>
@@ -29,18 +29,18 @@
         <dependency>
             <groupId>com.rnkrsoft.skeleton4j</groupId>
             <artifactId>skeleton4j-api</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.platform</groupId>
             <artifactId>interface-platform-client4j-sdk</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.skeleton4j</groupId>
             <artifactId>skeleton4j-doc</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.io4j</groupId>
@@ -63,14 +63,10 @@
             <version>1.0.1</version>
         </dependency>
         <dependency>
-            <groupId>com.rnkrsoft.skeleton4j</groupId>
-            <artifactId>skeleton4j-doc</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.16.14</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -123,4 +119,13 @@
             <version>${slf4j.version}</version>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.2</version>
+            </plugin>
+        </plugins>
+    </build>
 </project>

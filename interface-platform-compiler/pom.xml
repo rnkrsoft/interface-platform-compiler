@@ -6,9 +6,22 @@
     <parent>
         <groupId>com.rnkrsoft.platform</groupId>
         <artifactId>interface-platform-compiler-parent</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.2</version>
     </parent>
-
+    <name>Rnkrsoft Interface Platform Compiler</name>
+    <description>Rnkrsoft Interface Platform Compiler</description>
+    <url>https://github.com/rnkrsoft/interface-platform-compiler.git</url>
+    <licenses>
+        <license>
+            <name>GNU GENERAL PUBLIC LICENSE Version 2</name>
+            <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
+        </license>
+    </licenses>
+    <scm>
+        <connection>https://github.com/rnkrsoft/interface-platform.git</connection>
+        <developerConnection>https://github.com/rnkrsoft/interface-platform.git</developerConnection>
+        <url>https://www.rnkrsoft.com</url>
+    </scm>
     <artifactId>interface-platform-compiler</artifactId>
     <dependencies>
         <dependency>
@@ -38,6 +51,21 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <developers>
+        <developer>
+            <id>rnkrsoft.com</id>
+            <name>rnkrsoft.com</name>
+            <email>devops@rnkrsoft.com</email>
+            <url>http://www.rnkrsoft.com</url>
+            <organization>rnkrsoft.com</organization>
+            <organizationUrl>http://www.rnkrsoft.com</organizationUrl>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
     <build>
         <plugins>
             <plugin>
@@ -67,4 +95,65 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>sso</id>
+            <build>
+                <plugins>
+                    <!-- Javadoc -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <configuration>
+                            <charset>UTF-8</charset>
+                            <encoding>UTF-8</encoding>
+                            <docencoding>UTF-8</docencoding>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>2.5.2</version>
+                        <configuration>
+                            <useReleaseProfile>false</useReleaseProfile>
+                            <goals>deploy</goals>
+                        </configuration>
+                    </plugin>
+                    <!-- GPG -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>oss</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>oss</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 </project>
