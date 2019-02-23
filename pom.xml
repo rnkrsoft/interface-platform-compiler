@@ -4,15 +4,23 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rnkrsoft.platform</groupId>
-    <artifactId>interface-platform-compiler</artifactId>
+    <artifactId>interface-platform-compiler-parent</artifactId>
+    <packaging>pom</packaging>
     <version>1.0.1-SNAPSHOT</version>
+    <modules>
+        <module>interface-platform-compiler-core</module>
+        <module>interface-platform-compiler-benchmark</module>
+        <module>interface-platform-compiler-java</module>
+        <module>interface-platform-compiler-android</module>
+        <module>interface-platform-compiler-swift</module>
+        <module>interface-platform-compiler</module>
+    </modules>
     <properties>
         <maven.compiler.target>1.6</maven.compiler.target>
         <maven.compiler.source>1.6</maven.compiler.source>
         <java.version>1.6</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <slf4j.version>1.7.21</slf4j.version>
         <slf4j.version>1.7.21</slf4j.version>
         <log4j2.version>2.7</log4j2.version>
         <log4j-over-slf4j.version>1.7.5</log4j-over-slf4j.version>
@@ -22,6 +30,12 @@
             <groupId>com.rnkrsoft.skeleton4j</groupId>
             <artifactId>skeleton4j-api</artifactId>
             <version>1.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.platform</groupId>
+            <artifactId>interface-platform-client4j-sdk</artifactId>
+            <version>1.0.1</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.skeleton4j</groupId>
@@ -46,11 +60,6 @@
         <dependency>
             <groupId>com.rnkrsoft.logtrace4j</groupId>
             <artifactId>logtrace4j</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rnkrsoft.platform</groupId>
-            <artifactId>interface-platform-protocol</artifactId>
             <version>1.0.1</version>
         </dependency>
         <dependency>
