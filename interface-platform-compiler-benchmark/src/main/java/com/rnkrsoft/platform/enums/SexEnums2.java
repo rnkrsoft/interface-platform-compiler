@@ -3,7 +3,7 @@ package com.rnkrsoft.platform.enums;
 import com.rnkrsoft.interfaces.EnumIntegerCode;
 
 /**
- * Created by woate on 2018/10/10.
+ * Created by rnkrsoft.com on 2018/10/10.
  */
 public enum SexEnums2 implements EnumIntegerCode {
     MAN(1, "男人"),

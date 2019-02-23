@@ -6,7 +6,7 @@ import javax.web.doc.annotation.ApidocInterface;
 import javax.web.doc.annotation.ApidocService;
 
 /**
- * Created by woate on 2018/7/2.
+ * Created by rnkrsoft.com on 2018/7/2.
  * com_rnkrsoft_platform_service_DemoService
  */
 @ApidocService(value = "演示服务", channel = "user_app")
