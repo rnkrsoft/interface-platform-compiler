@@ -122,4 +122,25 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>rnkrsoft</id>
+            <repositories>
+                <repository>
+                    <id>rnkrsoft</id>
+                    <url>http://nexus.rnkrsoft.com/content/repositories/public/</url>
+                </repository>
+            </repositories>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>rnkrsoft</id>
+                    <url>http://nexus.rnkrsoft.com/content/repositories/open-source-snapshots/</url>
+                </snapshotRepository>
+                <repository>
+                    <id>rnkrsoft</id>
+                    <url>http://nexus.rnkrsoft.com/content/repositories/open-source-releases/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 </project>
