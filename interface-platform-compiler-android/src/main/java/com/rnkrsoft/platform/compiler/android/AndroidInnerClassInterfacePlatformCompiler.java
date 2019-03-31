@@ -23,7 +23,7 @@ import java.util.Set;
 /**
  * Created by rnkrsoft.com on 2019/2/2.
  */
-public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompiler {
+public class AndroidInnerClassInterfacePlatformCompiler implements InterfacePlatformCompiler {
 
     @Override
     public String getType() {
@@ -37,7 +37,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
             if (context.isPackZip()) {
                 OutputStream os = null;
                 try {
-                    File file = new File(context.getOutputPath(), context.getOutputFileName() + "-" + DateUtils.getTimestamp() + ".zip");
+                    File file = new File(context.getOutputPath(), context.getOutputFileName() + "-"+ DateUtils.getTimestamp() + ".zip");
                     if (file.exists()) {
                         file.delete();
                     }
@@ -59,7 +59,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
 
     void generate(CompileContext context, List<ServiceInfo> services) throws FileNotFoundException {
         for (ServiceInfo serviceInfo : services) {
-            if (!context.getIncludeServices().isEmpty() && !context.getIncludeServices().contains(serviceInfo.getServiceClassName())) {
+            if (!context.getIncludeServices().isEmpty() && !context.getIncludeServices().contains(serviceInfo.getServiceClassName())){
                 continue;
             }
             generateServiceClass(context, serviceInfo);
@@ -199,41 +199,38 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
                 buf.put("UTF-8", "\n");
             }
         }
-        context.decreaseDeep();
-        buf.put("UTF-8", context.indent_n(), "}\n");
+        Set<Class> classes = new HashSet<Class>();
+        for (ElementInfo column : interfaceInfo.getRequest().getElements()) {
+            if (column.isBean()) {
+                BeanElementInfo beanElementInfo = column.as(BeanElementInfo.class);
+                if (classes.contains(beanElementInfo.getJavaClass())) {
+                    continue;
+                }
+                classes.add(beanElementInfo.getJavaClass());
+                generateValueObjectClass(context, buf, beanElementInfo);
+            } else if (column.isForm()) {
+                FormElementInfo formElementInfo = column.as(FormElementInfo.class);
+                if (classes.contains(formElementInfo.getBeanClass())) {
+                    continue;
+                }
+                classes.add(formElementInfo.getBeanClass());
+                generateFormObjectClass(context, buf, formElementInfo);
+            }
+        }
+        buf.put("UTF-8", "}\n");
         InterfaceFileFormat fileFormat = new InterfaceFileFormat();
         fileFormat.setFilePath(context.getDomainsFilePath());
-        fileFormat.setPackagePath(context.getDomainsPackage(false));
-        fileFormat.setCode(buf.asString("UTF-8"));
+        fileFormat.setPackagePath(context.getDomainsPackage());
+        fileFormat.setCode(buf.getString("UTF-8", buf.readableLength()));
         fileFormat.setFileSuffix("java");
         fileFormat.setFileName(interfaceInfo.getRequestClass().getSimpleName());
         context.addInterfaceFile(fileFormat);
-        for (ElementInfo elementInfo : interfaceInfo.getRequest().getAllElements()) {
-            if (elementInfo.isBean()) {
-                generateValueObjectClass(context, elementInfo.as(BeanElementInfo.class), false);
-            }
-            if (elementInfo.isForm()) {
-                generateFormObjectClass(context, elementInfo.as(FormElementInfo.class), false);
-            }
-        }
+        context.decreaseDeep();
     }
 
-    void generateValueObjectClass(CompileContext context, BeanElementInfo elementInfo, boolean response) throws FileNotFoundException {
-        ByteBuf buf = ByteBuf.allocate(1024).autoExpand(true);
-        buf.put("UTF-8", "package ", context.getDomainsPackage(), ";\n");
+    void generateValueObjectClass(CompileContext context, ByteBuf buf, BeanElementInfo elementInfo) throws FileNotFoundException {
         buf.put("UTF-8", "\n");
-        buf.put("UTF-8", "import ", ApidocElement.class.getName(), ";", "\n");
-        buf.put("UTF-8", "\n");
-        buf.put("UTF-8", "import ", Serializable.class.getName(), ";", "\n");
-        buf.put("UTF-8", "import ", List.class.getName(), ";", "\n");
-        buf.put("UTF-8", "import ", ArrayList.class.getName(), ";", "\n");
-        buf.put("UTF-8", "\n");
-        buf.put("UTF-8", "import ", context.getDomainsPackage(), ".*;", "\n");
-        buf.put("UTF-8", "\n");
-        buf.put("UTF-8", "/**\n");
-        buf.put("UTF-8", " * ", context.getCopyright(), " \n");
-        buf.put("UTF-8", " */\n");
-        buf.put("UTF-8", "public class ", elementInfo.getJavaClass().getSimpleName(), " implements Serializable", " {\n");
+        buf.put("UTF-8", context.indent_n(), "public static class ", elementInfo.getJavaClass().getSimpleName(), " implements Serializable", " {\n");
         context.increaseDeep();
         for (ElementInfo column : elementInfo.getElements()) {
             if (column.isValue()) {
@@ -302,42 +299,32 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
                 buf.put("UTF-8", "\n");
             }
         }
-        context.decreaseDeep();
-        buf.put("UTF-8", "}\n");
-        InterfaceFileFormat fileFormat = new InterfaceFileFormat();
-        fileFormat.setFilePath(context.getDomainsFilePath());
-        fileFormat.setPackagePath(context.getDomainsPackage(false));
-        fileFormat.setCode(buf.asString("UTF-8"));
-        fileFormat.setFileSuffix("java");
-        fileFormat.setFileName(elementInfo.getJavaClass().getSimpleName());
-        context.addInterfaceFile(fileFormat);
-        for (ElementInfo elementInfo1 : elementInfo.getElements()) {
-            if (elementInfo1.isBean()) {
-                generateValueObjectClass(context, elementInfo1.as(BeanElementInfo.class), response);
-            }
-            if (elementInfo1.isForm()) {
-                generateFormObjectClass(context, elementInfo1.as(FormElementInfo.class), response);
+        Set<Class> classes = new HashSet<Class>();
+        for (ElementInfo column : elementInfo.getElements()) {
+            if (column.isBean()) {
+                BeanElementInfo beanElementInfo = column.as(BeanElementInfo.class);
+                if (classes.contains(beanElementInfo.getJavaClass())) {
+                    continue;
+                }
+                classes.add(beanElementInfo.getJavaClass());
+                generateValueObjectClass(context, buf, beanElementInfo);
+            } else if (column.isForm()) {
+                FormElementInfo formElementInfo = column.as(FormElementInfo.class);
+                if (classes.contains(formElementInfo.getBeanClass())) {
+                    continue;
+                }
+                classes.add(formElementInfo.getBeanClass());
+                generateFormObjectClass(context, buf, formElementInfo);
             }
         }
+        context.decreaseDeep();
+        buf.put("UTF-8", context.indent_n(), "}\n");
     }
 
 
-    void generateFormObjectClass(CompileContext context, FormElementInfo elementInfo, boolean response) throws FileNotFoundException {
-        ByteBuf buf = ByteBuf.allocate(1024).autoExpand(true);
-        buf.put("UTF-8", "package ", context.getDomainsPackage(), ";\n");
+    void generateFormObjectClass(CompileContext context, ByteBuf buf, FormElementInfo elementInfo) throws FileNotFoundException {
         buf.put("UTF-8", "\n");
-        buf.put("UTF-8", "import ", ApidocElement.class.getName(), ";", "\n");
-        buf.put("UTF-8", "\n");
-        buf.put("UTF-8", "import ", Serializable.class.getName(), ";", "\n");
-        buf.put("UTF-8", "import ", List.class.getName(), ";", "\n");
-        buf.put("UTF-8", "import ", ArrayList.class.getName(), ";", "\n");
-        buf.put("UTF-8", "\n");
-        buf.put("UTF-8", "import ", context.getDomainsPackage(), ".*;", "\n");
-        buf.put("UTF-8", "\n");
-        buf.put("UTF-8", "/**\n");
-        buf.put("UTF-8", " * ", context.getCopyright(), " \n");
-        buf.put("UTF-8", " */\n");
-        buf.put("UTF-8", "public class ", elementInfo.getBeanClass().getSimpleName(), " implements Serializable", " {\n");
+        buf.put("UTF-8", context.indent_n(), "public static class ", elementInfo.getBeanClass().getSimpleName(), " implements Serializable", " {\n");
         context.increaseDeep();
         for (ElementInfo column : elementInfo.getElements()) {
             if (column.isValue()) {
@@ -406,23 +393,26 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
                 buf.put("UTF-8", "\n");
             }
         }
-        context.decreaseDeep();
-        buf.put("UTF-8", "}\n");
-        InterfaceFileFormat fileFormat = new InterfaceFileFormat();
-        fileFormat.setFilePath(context.getDomainsFilePath());
-        fileFormat.setPackagePath(context.getDomainsPackage(false));
-        fileFormat.setCode(buf.asString("UTF-8"));
-        fileFormat.setFileSuffix("java");
-        fileFormat.setFileName(elementInfo.getBeanClass().getSimpleName());
-        context.addInterfaceFile(fileFormat);
-        for (ElementInfo elementInfo1 : elementInfo.getElements()) {
-            if (elementInfo1.isBean()) {
-                generateValueObjectClass(context, elementInfo1.as(BeanElementInfo.class), response);
-            }
-            if (elementInfo1.isForm()) {
-                generateFormObjectClass(context, elementInfo1.as(FormElementInfo.class), response);
+        Set<Class> classes = new HashSet<Class>();
+        for (ElementInfo column : elementInfo.getElements()) {
+            if (column.isBean()) {
+                BeanElementInfo beanElementInfo = column.as(BeanElementInfo.class);
+                if (classes.contains(beanElementInfo.getJavaClass())) {
+                    continue;
+                }
+                classes.add(beanElementInfo.getJavaClass());
+                generateValueObjectClass(context, buf, beanElementInfo);
+            } else if (column.isForm()) {
+                FormElementInfo formElementInfo = column.as(FormElementInfo.class);
+                if (classes.contains(formElementInfo.getBeanClass())) {
+                    continue;
+                }
+                classes.add(formElementInfo.getBeanClass());
+                generateFormObjectClass(context, buf, formElementInfo);
             }
         }
+        context.decreaseDeep();
+        buf.put("UTF-8", context.indent_n(), "}\n");
     }
 
     void generateResponseClass(CompileContext context, InterfaceInfo interfaceInfo) throws FileNotFoundException {
@@ -454,7 +444,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
                 }
             }
         }
-        buf.put("UTF-8", "public class ", interfaceInfo.getResponseClass().getSimpleName(), (interfaceInfo.isPageable() ? " extends " + AbstractResponsePage.class.getSimpleName() + "<" + recordsJavaClass.getSimpleName() + ">" : " extends AbstractResponse"), " {\n");
+        buf.put("UTF-8", "public class ", interfaceInfo.getResponseClass().getSimpleName(), (interfaceInfo.isPageable() ? " extends " + AbstractResponsePage.class.getSimpleName() + "<" + interfaceInfo.getResponseClass().getSimpleName() + "." + recordsJavaClass.getSimpleName() + ">" : " extends AbstractResponse"), " {\n");
         context.increaseDeep();
         for (ElementInfo column : interfaceInfo.getResponse().getElements()) {
             if (column.isValue()) {
@@ -529,6 +519,39 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
                 buf.put("UTF-8", "\n");
             }
         }
+        Set<Class> classes = new HashSet<Class>();
+        for (ElementInfo column : interfaceInfo.getResponse().getElements()) {
+            if (column.isBean()) {
+                BeanElementInfo beanElementInfo = column.as(BeanElementInfo.class);
+                if (classes.contains(beanElementInfo.getJavaClass())) {
+                    continue;
+                }
+                classes.add(beanElementInfo.getJavaClass());
+                generateValueObjectClass(context, buf, beanElementInfo);
+            } else if (column.isForm()) {
+                FormElementInfo formElementInfo = column.as(FormElementInfo.class);
+                if (classes.contains(formElementInfo.getBeanClass())) {
+                    continue;
+                }
+                classes.add(formElementInfo.getBeanClass());
+                generateFormObjectClass(context, buf, formElementInfo);
+            }
+        }
+        if (interfaceInfo.isPageable()) {
+            List<ElementInfo> columns = interfaceInfo.getResponse().getAllElements();
+            for (ElementInfo column : columns) {
+                if (column.isBean()) {
+
+                } else if (column.isForm()) {
+                    FormElementInfo formElementInfo = column.as(FormElementInfo.class);
+                    if (classes.contains(formElementInfo.getBeanClass())) {
+                        continue;
+                    }
+                    classes.add(formElementInfo.getBeanClass());
+                    generateFormObjectClass(context, buf, formElementInfo);
+                }
+            }
+        }
         context.decreaseDeep();
         buf.put("UTF-8", "}\n");
         InterfaceFileFormat fileFormat = new InterfaceFileFormat();
@@ -538,25 +561,5 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
         fileFormat.setFileSuffix("java");
         fileFormat.setFileName(interfaceInfo.getResponseClass().getSimpleName());
         context.addInterfaceFile(fileFormat);
-
-        Set<Class> classes = new HashSet<Class>();
-        for (ElementInfo column : interfaceInfo.getResponse().getElements()) {
-            if (column.isBean()) {
-                BeanElementInfo beanElementInfo = column.as(BeanElementInfo.class);
-                if (classes.contains(beanElementInfo.getJavaClass())) {
-                    continue;
-                }
-                classes.add(beanElementInfo.getJavaClass());
-                generateValueObjectClass(context, beanElementInfo, true);
-            } else if (column.isForm()) {
-                FormElementInfo formElementInfo = column.as(FormElementInfo.class);
-                if (classes.contains(formElementInfo.getBeanClass())) {
-                    continue;
-                }
-                classes.add(formElementInfo.getBeanClass());
-                generateFormObjectClass(context, formElementInfo, true);
-            }
-        }
-
     }
 }
