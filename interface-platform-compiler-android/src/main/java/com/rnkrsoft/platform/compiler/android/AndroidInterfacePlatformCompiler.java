@@ -132,7 +132,9 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
         buf.put("UTF-8", " * ", context.getCopyright(), " \n");
         buf.put("UTF-8", " */\n");
         buf.put("UTF-8", "public class ", interfaceInfo.getRequestClass().getSimpleName(), (interfaceInfo.isPageable() ? " extends AbstractRequestPage" : " implements Serializable"), " {\n");
-        for (ElementInfo column : interfaceInfo.getRequest().getElements()) {
+        List<ElementInfo> columns = new ArrayList<ElementInfo>();
+        columns.addAll(interfaceInfo.getRequest().getElements());
+        for (ElementInfo column : columns) {
             if (column.isValue()) {
                 ValueElementInfo valueElementInfo = column.as(ValueElementInfo.class);
                 if (valueElementInfo.isEnum()) {
@@ -163,7 +165,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
             }
         }
 
-        for (ElementInfo column : interfaceInfo.getRequest().getElements()) {
+        for (ElementInfo column : columns) {
             if (column.isValue()) {
                 ValueElementInfo valueElementInfo = column.as(ValueElementInfo.class);
                 if (valueElementInfo.isMultiple()) {
@@ -208,7 +210,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
         fileFormat.setFileSuffix("java");
         fileFormat.setFileName(interfaceInfo.getRequestClass().getSimpleName());
         context.addInterfaceFile(fileFormat);
-        for (ElementInfo elementInfo : interfaceInfo.getRequest().getAllElements()) {
+        for (ElementInfo elementInfo : columns) {
             if (elementInfo.isBean()) {
                 generateValueObjectClass(context, elementInfo.as(BeanElementInfo.class), false);
             }
@@ -446,17 +448,21 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
         buf.put("UTF-8", " * ", context.getCopyright(), " \n");
         buf.put("UTF-8", " */\n");
         Class recordsJavaClass = null;
-        for (ElementInfo column : interfaceInfo.getResponse().getAllElements()) {
-            if (column.isForm()) {
-                FormElementInfo formElementInfo = column.as(FormElementInfo.class);
-                if (interfaceInfo.isPageable() && formElementInfo.getName().equals("records")) {
-                    recordsJavaClass = formElementInfo.getBeanClass();
+        List<ElementInfo> columns = new ArrayList<ElementInfo>();
+        columns.addAll(interfaceInfo.getResponse().getElements());
+        if (interfaceInfo.getResponse().isPageable()){
+            for (ElementInfo column : interfaceInfo.getResponse().getAllElements()) {
+                if (column.isForm()) {
+                    FormElementInfo formElementInfo = column.as(FormElementInfo.class);
+                    if (formElementInfo.getName().equals("records")) {
+                        recordsJavaClass = formElementInfo.getBeanClass();
+                    }
                 }
             }
         }
         buf.put("UTF-8", "public class ", interfaceInfo.getResponseClass().getSimpleName(), (interfaceInfo.isPageable() ? " extends " + AbstractResponsePage.class.getSimpleName() + "<" + recordsJavaClass.getSimpleName() + ">" : " extends AbstractResponse"), " {\n");
         context.increaseDeep();
-        for (ElementInfo column : interfaceInfo.getResponse().getElements()) {
+        for (ElementInfo column : columns) {
             if (column.isValue()) {
                 ValueElementInfo valueElementInfo = column.as(ValueElementInfo.class);
                 if (valueElementInfo.isEnum()) {
@@ -490,7 +496,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
             }
         }
 
-        for (ElementInfo column : interfaceInfo.getResponse().getElements()) {
+        for (ElementInfo column : columns) {
             if (column.isValue()) {
                 ValueElementInfo valueElementInfo = column.as(ValueElementInfo.class);
                 if (valueElementInfo.isMultiple()) {
@@ -540,7 +546,7 @@ public class AndroidInterfacePlatformCompiler implements InterfacePlatformCompil
         context.addInterfaceFile(fileFormat);
 
         Set<Class> classes = new HashSet<Class>();
-        for (ElementInfo column : interfaceInfo.getResponse().getElements()) {
+        for (ElementInfo column : interfaceInfo.getResponse().getAllElements()) {
             if (column.isBean()) {
                 BeanElementInfo beanElementInfo = column.as(BeanElementInfo.class);
                 if (classes.contains(beanElementInfo.getJavaClass())) {

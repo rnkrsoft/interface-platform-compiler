@@ -34,7 +34,7 @@ public class AndroidInterfacePlatformCompilerTest {
     @Test
     public void testCompile1() throws Exception {
         String[] serviceClasses = new String[]{};
-        InterfacePlatformGenerator.generate(DeviceType.iOS, "com.rnkrsoft.demo", "./target", "com.rnkrsoft.platform.service", serviceClasses);
+        InterfacePlatformGenerator.generate(DeviceType.Android, "com.rnkrsoft.demo", "./target", "com.rnkrsoft.platform.service", serviceClasses);
 
     }
 }

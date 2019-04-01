@@ -14,7 +14,7 @@
         <dependency>
             <groupId>com.rnkrsoft.platform</groupId>
             <artifactId>interface-platform-protocol</artifactId>
-            <version>1.0.2</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

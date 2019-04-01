@@ -9,5 +9,5 @@ import java.io.Serializable;
  * Created by rnkrsoft.com on 2018/7/2.
  */
 @Data
-public class QueryResponse extends AbstractResponsePage<RecordVO> implements Serializable {
+public class QueryResponse extends AbstractResponsePage<Record4VO> implements Serializable {
 }
