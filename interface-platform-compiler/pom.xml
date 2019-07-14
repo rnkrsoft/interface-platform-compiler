@@ -6,7 +6,7 @@
 
     <groupId>com.rnkrsoft.platform</groupId>
     <artifactId>interface-platform-compiler</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <name>Rnkrsoft Interface Platform Compiler</name>
     <description>Rnkrsoft Interface Platform Compiler</description>
     <url>https://github.com/rnkrsoft/interface-platform-compiler.git</url>

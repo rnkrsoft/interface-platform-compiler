@@ -6,7 +6,7 @@
     <groupId>com.rnkrsoft.platform</groupId>
     <artifactId>interface-platform-compiler-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <modules>
         <module>interface-platform-compiler-core</module>
         <module>interface-platform-compiler-benchmark</module>
@@ -29,7 +29,7 @@
         <dependency>
             <groupId>com.rnkrsoft.skeleton4j</groupId>
             <artifactId>skeleton4j-api</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.platform</groupId>
@@ -40,22 +40,22 @@
         <dependency>
             <groupId>com.rnkrsoft.skeleton4j</groupId>
             <artifactId>skeleton4j-doc</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.io4j</groupId>
             <artifactId>io4j</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.3</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.groundwork</groupId>
             <artifactId>groundwork</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.reflection4j</groupId>
             <artifactId>reflection4j</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.3</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.logtrace4j</groupId>
@@ -85,6 +85,19 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>2.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

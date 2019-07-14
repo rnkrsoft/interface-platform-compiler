@@ -34,6 +34,9 @@ public class SwiftInterfacePlatformCompiler implements InterfacePlatformCompiler
             OutputStream os = null;
             try {
                 File file = new File(context.getOutputPath(), context.getOutputFileName() + "-"+ DateUtils.getTimestamp() + ".zip");
+                if (!file.getParentFile().exists()){
+                    file.getParentFile().mkdirs();
+                }
                 if (file.exists()) {
                     file.delete();
                 }
@@ -74,18 +77,18 @@ public class SwiftInterfacePlatformCompiler implements InterfacePlatformCompiler
             targetPackage = packageName.substring(0, lastDotIdx1);
             context.setTargetPackage(targetPackage);
         }
-        buf.put("UTF-8", "import Foundation", "\n");
-        buf.put("UTF-8", "import InterfacePlatformClientSDK", "\n");
-        buf.put("UTF-8", "\n");
-        buf.put("UTF-8", "/**", "\n");
-        buf.put("UTF-8", " *  ", context.getCopyright(),  "\n");
-        buf.put("UTF-8", " *  ", serviceInfo.getDesc(), "\n");
-        buf.put("UTF-8", " */", "\n");
-        buf.put("UTF-8", "class ", context.getServicePackage(false), serviceInfo.getServiceClass().getSimpleName(), " {", "\n");
+        buf.putUTF8("import Foundation", "\n");
+        buf.putUTF8("import InterfacePlatformClientSDK", "\n");
+        buf.putUTF8("\n");
+        buf.putUTF8("/**", "\n");
+        buf.putUTF8(" *  ", context.getCopyright(),  "\n");
+        buf.putUTF8(" *  ", serviceInfo.getDesc(), "\n");
+        buf.putUTF8(" */", "\n");
+        buf.putUTF8("class ", context.getServicePackage(false), serviceInfo.getServiceClass().getSimpleName(), " {", "\n");
         context.increaseDeep();
         for (InterfaceInfo interfaceInfo : serviceInfo.getInterfaces()) {
-            buf.put("UTF-8", context.indent_n(), "///", interfaceInfo.getDesc(), " ", interfaceInfo.getUsage(), "\n");
-            buf.put("UTF-8", context.indent_n(), "let ", interfaceInfo.getMethodName(),
+            buf.putUTF8(context.indent_n(), "///", interfaceInfo.getDesc(), " ", interfaceInfo.getUsage(), "\n");
+            buf.putUTF8(context.indent_n(), "let ", interfaceInfo.getMethodName(),
                     " = ApiModel<", context.getDomainsPackage(false), interfaceInfo.getRequestClass().getSimpleName(), ", ", context.getDomainsPackage(false), interfaceInfo.getResponseClass().getSimpleName(), ">",
                     "(",
                     " channel : \"", serviceInfo.getChannel(), "\",",
@@ -93,10 +96,10 @@ public class SwiftInterfacePlatformCompiler implements InterfacePlatformCompiler
                     " version : \"", interfaceInfo.getVersion(), "\",",
                     " value : \"", interfaceInfo.getDesc(), "\")",
                     "\n");
-            buf.put("UTF-8", "\n");
+            buf.putUTF8("\n");
         }
         context.decreaseDeep();
-        buf.put("UTF-8", "}");
+        buf.putUTF8("}");
         InterfaceFileFormat fileFormat = new InterfaceFileFormat();
         fileFormat.setFilePath(context.getServiceFilePath());
         fileFormat.setPackagePath(context.getServicePackage(false));
@@ -108,60 +111,60 @@ public class SwiftInterfacePlatformCompiler implements InterfacePlatformCompiler
 
     void generateRequestClass(CompileContext context, InterfaceInfo interfaceInfo) throws FileNotFoundException {
         ByteBuf buf = ByteBuf.allocate(1024).autoExpand(true);
-        buf.put("UTF-8", "import Foundation", "\n");
-        buf.put("UTF-8", "import InterfacePlatformClientSDK", "\n");
-        buf.put("UTF-8", "\n");
-        buf.put("UTF-8", "/**", "\n");
-        buf.put("UTF-8", " *  ", context.getCopyright(),  "\n");
-        buf.put("UTF-8", " *  ", interfaceInfo.getDesc(), "\n");
-        buf.put("UTF-8", " */", "\n");
-        buf.put("UTF-8", "struct ", context.getDomainsPackage(false) + interfaceInfo.getRequestClass().getSimpleName(), " : JSONable {", "\n");
+        buf.putUTF8("import Foundation", "\n");
+        buf.putUTF8("import InterfacePlatformClientSDK", "\n");
+        buf.putUTF8("\n");
+        buf.putUTF8("/**", "\n");
+        buf.putUTF8(" *  ", context.getCopyright(),  "\n");
+        buf.putUTF8(" *  ", interfaceInfo.getDesc(), "\n");
+        buf.putUTF8(" */", "\n");
+        buf.putUTF8("struct ", context.getDomainsPackage(false) + interfaceInfo.getRequestClass().getSimpleName(), " : JSONable {", "\n");
         context.increaseDeep();
         for (ElementInfo column : interfaceInfo.getRequest().getAllElements()) {
 
             if (column.isValue()) {
                 ValueElementInfo valueElementInfo = column.as(ValueElementInfo.class);
-                buf.put("UTF-8", context.indent_n(), "///", valueElementInfo.isRequired() ? "必输 " : "", valueElementInfo.getDesc(), " ", StringUtils.safeToString(valueElementInfo.getUsage(), ""), " ", "\n");
+                buf.putUTF8(context.indent_n(), "///", valueElementInfo.isRequired() ? "必输 " : "", valueElementInfo.getDesc(), " ", StringUtils.safeToString(valueElementInfo.getUsage(), ""), " ", "\n");
                 if (valueElementInfo.isEnum()) {
                     for (String code : valueElementInfo.getEnums().keySet()){
-                        buf.put("UTF-8", context.indent_n(), "///", code, ":", valueElementInfo.getEnums().get(code), "\n");
+                        buf.putUTF8(context.indent_n(), "///", code, ":", valueElementInfo.getEnums().get(code), "\n");
                     }
-//                    buf.put("UTF-8", context.indent_n(), "///", valueElementInfo.getEnums().toString(), "\n");
+//                    buf.putUTF8(context.indent_n(), "///", valueElementInfo.getEnums().toString(), "\n");
                 }
                 if (valueElementInfo.getJavaClass() == Integer.TYPE || valueElementInfo.getJavaClass() == Integer.class) {
                     if (valueElementInfo.isMultiple()) {
-                        buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": [Int]?", "\n");
+                        buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": [Int]?", "\n");
                     } else {
-                        buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": Int", valueElementInfo.isRequired() ? " = 0" : "?", "\n");
+                        buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": Int", valueElementInfo.isRequired() ? " = 0" : "?", "\n");
                     }
                 } else if (valueElementInfo.getJavaClass() == String.class) {
                     if (valueElementInfo.isMultiple()) {
-                        buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ":  [String]?", "\n");
+                        buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ":  [String]?", "\n");
                     } else {
-                        buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": String", valueElementInfo.isRequired() ? " = \"\"" : "?", "\n");
+                        buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": String", valueElementInfo.isRequired() ? " = \"\"" : "?", "\n");
                     }
                 } else if (valueElementInfo.getJavaClass() == Boolean.TYPE || valueElementInfo.getJavaClass() == Boolean.class) {
-                    buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": Bool", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = true" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
+                    buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": Bool", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = true" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
                 } else if (valueElementInfo.getJavaClass() == Integer.TYPE || valueElementInfo.getJavaClass() == Integer.class) {
-                    buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": Int", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = 0" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
+                    buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": Int", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = 0" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
                 } else if (valueElementInfo.getJavaClass() == Long.TYPE || valueElementInfo.getJavaClass() == Long.class) {
-                    buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": Int64", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = 0" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
+                    buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": Int64", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = 0" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
                 } else {
-                    buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": ", (valueElementInfo.getDefaults().isEmpty() ? " " : "=" + valueElementInfo.getDefaults().get(0)), "?", "\n");
+                    buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": ", (valueElementInfo.getDefaults().isEmpty() ? " " : "=" + valueElementInfo.getDefaults().get(0)), "?", "\n");
                 }
             } else if (column.isBean()) {
                 BeanElementInfo beanElementInfo = column.as(BeanElementInfo.class);
-                buf.put("UTF-8", context.indent_n(), "///", beanElementInfo.getDesc(), " ", beanElementInfo.getUsage(), "\n");
-                buf.put("UTF-8", context.indent_n(), "var ", beanElementInfo.getName(), ": ", context.getDomainsPackage(false), beanElementInfo.getJavaClass().getSimpleName(), " ?", "\n");
+                buf.putUTF8(context.indent_n(), "///", beanElementInfo.getDesc(), " ", beanElementInfo.getUsage(), "\n");
+                buf.putUTF8(context.indent_n(), "var ", beanElementInfo.getName(), ": ", context.getDomainsPackage(false), beanElementInfo.getJavaClass().getSimpleName(), " ?", "\n");
             } else if (column.isForm()) {
                 FormElementInfo formElementInfo = column.as(FormElementInfo.class);
-                buf.put("UTF-8", context.indent_n(), "///", formElementInfo.getDesc(), " ", formElementInfo.getUsage(), "\n");
-                buf.put("UTF-8", context.indent_n(), "var ", column.getName(), ": [", context.getDomainsPackage(false), formElementInfo.getBeanClass().getSimpleName(), "]?", "\n");
+                buf.putUTF8(context.indent_n(), "///", formElementInfo.getDesc(), " ", formElementInfo.getUsage(), "\n");
+                buf.putUTF8(context.indent_n(), "var ", column.getName(), ": [", context.getDomainsPackage(false), formElementInfo.getBeanClass().getSimpleName(), "]?", "\n");
             }
-            buf.put("UTF-8", "\n");
+            buf.putUTF8("\n");
         }
         context.decreaseDeep();
-        buf.put("UTF-8", "}");
+        buf.putUTF8("}");
         InterfaceFileFormat fileFormat = new InterfaceFileFormat();
         fileFormat.setFilePath(context.getDomainsFilePath());
         fileFormat.setPackagePath(context.getDomainsPackage(false));
@@ -181,64 +184,64 @@ public class SwiftInterfacePlatformCompiler implements InterfacePlatformCompiler
 
     void generateValueObjectClass(CompileContext context, BeanElementInfo elementInfo, boolean response) throws FileNotFoundException {
         ByteBuf buf = ByteBuf.allocate(1024).autoExpand(true);
-        buf.put("UTF-8", "import Foundation", "\n");
-        buf.put("UTF-8", "import InterfacePlatformClientSDK", "\n");
-        buf.put("UTF-8", "\n");
-        buf.put("UTF-8", "/**", "\n");
-        buf.put("UTF-8", " *  ", context.getCopyright(),  "\n");
-        buf.put("UTF-8", " *  ", elementInfo.getDesc(), "\n");
-        buf.put("UTF-8", " */", "\n");
-        buf.put("UTF-8", "class ", context.getDomainsPackage(false) + elementInfo.getJavaClass().getSimpleName(), " : NSObject, JSONable {", "\n");
+        buf.putUTF8("import Foundation", "\n");
+        buf.putUTF8("import InterfacePlatformClientSDK", "\n");
+        buf.putUTF8("\n");
+        buf.putUTF8("/**", "\n");
+        buf.putUTF8(" *  ", context.getCopyright(),  "\n");
+        buf.putUTF8(" *  ", elementInfo.getDesc(), "\n");
+        buf.putUTF8(" */", "\n");
+        buf.putUTF8("class ", context.getDomainsPackage(false) + elementInfo.getJavaClass().getSimpleName(), " : NSObject, JSONable {", "\n");
         context.increaseDeep();
         for (ElementInfo column : elementInfo.getElements()) {
             if (column.isValue()) {
                 ValueElementInfo valueElementInfo = column.as(ValueElementInfo.class);
-                buf.put("UTF-8", context.indent_n(), "///", valueElementInfo.isRequired() ? "必输 " : "", valueElementInfo.getDesc(), " ", StringUtils.safeToString(valueElementInfo.getUsage(), ""), " ", "\n");
+                buf.putUTF8(context.indent_n(), "///", valueElementInfo.isRequired() ? "必输 " : "", valueElementInfo.getDesc(), " ", StringUtils.safeToString(valueElementInfo.getUsage(), ""), " ", "\n");
                 if (valueElementInfo.isEnum()) {
                     for (String code : valueElementInfo.getEnums().keySet()){
-                        buf.put("UTF-8", context.indent_n(), "///", code, ":", valueElementInfo.getEnums().get(code), "\n");
+                        buf.putUTF8(context.indent_n(), "///", code, ":", valueElementInfo.getEnums().get(code), "\n");
                     }
-//                    buf.put("UTF-8", context.indent_n(), "///", valueElementInfo.getEnums().toString(), "\n");
+//                    buf.putUTF8(context.indent_n(), "///", valueElementInfo.getEnums().toString(), "\n");
                 }
                 if (valueElementInfo.getJavaClass() == Integer.TYPE || valueElementInfo.getJavaClass() == Integer.class) {
                     if (valueElementInfo.isMultiple()) {
-                        buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": [Int]?", "\n");
+                        buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": [Int]?", "\n");
                     } else {
-                        buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": Int", valueElementInfo.isRequired() ? " = 0" : "?", "\n");
+                        buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": Int", valueElementInfo.isRequired() ? " = 0" : "?", "\n");
                     }
                 } else if (valueElementInfo.getJavaClass() == String.class) {
                     if (valueElementInfo.isMultiple()) {
-                        buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ":  [String]?", "\n");
+                        buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ":  [String]?", "\n");
                     } else {
-                        buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": String", valueElementInfo.isRequired() ? " = \"\"" : "?", "\n");
+                        buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": String", valueElementInfo.isRequired() ? " = \"\"" : "?", "\n");
                     }
                 } else if (valueElementInfo.getJavaClass() == Boolean.TYPE || valueElementInfo.getJavaClass() == Boolean.class) {
-                    buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": Bool", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = true" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
+                    buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": Bool", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = true" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
                 } else if (valueElementInfo.getJavaClass() == Integer.TYPE || valueElementInfo.getJavaClass() == Integer.class) {
-                    buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": Int", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = 0" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
+                    buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": Int", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = 0" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
                 } else if (valueElementInfo.getJavaClass() == Long.TYPE || valueElementInfo.getJavaClass() == Long.class) {
-                    buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": Int64", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = 0" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
+                    buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": Int64", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = 0" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
                 } else {
-                    buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": ", (valueElementInfo.getDefaults().isEmpty() ? " " : "=" + valueElementInfo.getDefaults().get(0)), "?", "\n");
+                    buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": ", (valueElementInfo.getDefaults().isEmpty() ? " " : "=" + valueElementInfo.getDefaults().get(0)), "?", "\n");
                 }
             } else if (column.isBean()) {
                 BeanElementInfo beanElementInfo = column.as(BeanElementInfo.class);
-                buf.put("UTF-8", context.indent_n(), "///", beanElementInfo.getDesc(), " ", beanElementInfo.getUsage(), "\n");
-                buf.put("UTF-8", context.indent_n(), "var ", beanElementInfo.getName(), ": ", context.getDomainsPackage(false), beanElementInfo.getJavaClass().getSimpleName(), " ?", "\n");
+                buf.putUTF8(context.indent_n(), "///", beanElementInfo.getDesc(), " ", beanElementInfo.getUsage(), "\n");
+                buf.putUTF8(context.indent_n(), "var ", beanElementInfo.getName(), ": ", context.getDomainsPackage(false), beanElementInfo.getJavaClass().getSimpleName(), " ?", "\n");
             } else if (column.isForm()) {
                 FormElementInfo formElementInfo = column.as(FormElementInfo.class);
-                buf.put("UTF-8", context.indent_n(), "///", formElementInfo.getDesc(), " ", formElementInfo.getUsage(), "\n");
-                buf.put("UTF-8", context.indent_n(), "var ", column.getName(), ": [", context.getDomainsPackage(false), formElementInfo.getBeanClass().getSimpleName(), "]?", "\n");
+                buf.putUTF8(context.indent_n(), "///", formElementInfo.getDesc(), " ", formElementInfo.getUsage(), "\n");
+                buf.putUTF8(context.indent_n(), "var ", column.getName(), ": [", context.getDomainsPackage(false), formElementInfo.getBeanClass().getSimpleName(), "]?", "\n");
             }
-            buf.put("UTF-8", "\n");
+            buf.putUTF8("\n");
         }
         if (response) {
-            buf.put("UTF-8", context.indent_n(), "required override init() {", "\n");
-            buf.put("UTF-8", context.indent_n(), "}", "\n");
-            buf.put("UTF-8", "\n");
+            buf.putUTF8(context.indent_n(), "required override init() {", "\n");
+            buf.putUTF8(context.indent_n(), "}", "\n");
+            buf.putUTF8("\n");
         }
         context.decreaseDeep();
-        buf.put("UTF-8", "}");
+        buf.putUTF8("}");
         InterfaceFileFormat fileFormat = new InterfaceFileFormat();
         fileFormat.setFilePath(context.getDomainsFilePath());
         fileFormat.setPackagePath(context.getDomainsPackage(false));
@@ -258,64 +261,64 @@ public class SwiftInterfacePlatformCompiler implements InterfacePlatformCompiler
 
     void generateFormObjectClass(CompileContext context, FormElementInfo elementInfo, boolean response) throws FileNotFoundException {
         ByteBuf buf = ByteBuf.allocate(1024).autoExpand(true);
-        buf.put("UTF-8", "import Foundation", "\n");
-        buf.put("UTF-8", "import InterfacePlatformClientSDK", "\n");
-        buf.put("UTF-8", "\n");
-        buf.put("UTF-8", "/**", "\n");
-        buf.put("UTF-8", " *  ", context.getCopyright(),  "\n");
-        buf.put("UTF-8", " *  ", elementInfo.getDesc(), "\n");
-        buf.put("UTF-8", " */", "\n");
-        buf.put("UTF-8", "class ", context.getDomainsPackage(false) + elementInfo.getBeanClass().getSimpleName(), " : NSObject, JSONable {", "\n");
+        buf.putUTF8("import Foundation", "\n");
+        buf.putUTF8("import InterfacePlatformClientSDK", "\n");
+        buf.putUTF8("\n");
+        buf.putUTF8("/**", "\n");
+        buf.putUTF8(" *  ", context.getCopyright(),  "\n");
+        buf.putUTF8(" *  ", elementInfo.getDesc(), "\n");
+        buf.putUTF8(" */", "\n");
+        buf.putUTF8("class ", context.getDomainsPackage(false) + elementInfo.getBeanClass().getSimpleName(), " : NSObject, JSONable {", "\n");
         context.increaseDeep();
         for (ElementInfo column : elementInfo.getElements()) {
             if (column.isValue()) {
                 ValueElementInfo valueElementInfo = column.as(ValueElementInfo.class);
-                buf.put("UTF-8", context.indent_n(), "///", valueElementInfo.isRequired() ? "必输 " : "", valueElementInfo.getDesc(), " ", StringUtils.safeToString(valueElementInfo.getUsage(), ""), " ", "\n");
+                buf.putUTF8(context.indent_n(), "///", valueElementInfo.isRequired() ? "必输 " : "", valueElementInfo.getDesc(), " ", StringUtils.safeToString(valueElementInfo.getUsage(), ""), " ", "\n");
                 if (valueElementInfo.isEnum()) {
                     for (String code : valueElementInfo.getEnums().keySet()){
-                        buf.put("UTF-8", context.indent_n(), "///", code, ":", valueElementInfo.getEnums().get(code), "\n");
+                        buf.putUTF8(context.indent_n(), "///", code, ":", valueElementInfo.getEnums().get(code), "\n");
                     }
-//                    buf.put("UTF-8", context.indent_n(), "///", valueElementInfo.getEnums().toString(), "\n");
+//                    buf.putUTF8(context.indent_n(), "///", valueElementInfo.getEnums().toString(), "\n");
                 }
                 if (valueElementInfo.getJavaClass() == Integer.TYPE || valueElementInfo.getJavaClass() == Integer.class) {
                     if (valueElementInfo.isMultiple()) {
-                        buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": [Int]?", "\n");
+                        buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": [Int]?", "\n");
                     } else {
-                        buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": Int", valueElementInfo.isRequired() ? " = 0" : " ?", "\n");
+                        buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": Int", valueElementInfo.isRequired() ? " = 0" : " ?", "\n");
                     }
                 } else if (valueElementInfo.getJavaClass() == String.class) {
                     if (valueElementInfo.isMultiple()) {
-                        buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ":  [String]?", "\n");
+                        buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ":  [String]?", "\n");
                     } else {
-                        buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": String", valueElementInfo.isRequired() ? " = \"\"" : "?", "\n");
+                        buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": String", valueElementInfo.isRequired() ? " = \"\"" : "?", "\n");
                     }
                 } else if (valueElementInfo.getJavaClass() == Boolean.TYPE || valueElementInfo.getJavaClass() == Boolean.class) {
-                    buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": Bool", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = true" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
+                    buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": Bool", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = true" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
                 } else if (valueElementInfo.getJavaClass() == Integer.TYPE || valueElementInfo.getJavaClass() == Integer.class) {
-                    buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": Int", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = 0" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
+                    buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": Int", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = 0" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
                 } else if (valueElementInfo.getJavaClass() == Long.TYPE || valueElementInfo.getJavaClass() == Long.class) {
-                    buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": Int64", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = 0" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
+                    buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": Int64", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = 0" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
                 } else {
-                    buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": ", (valueElementInfo.getDefaults().isEmpty() ? " " : "=" + valueElementInfo.getDefaults().get(0)), "?", "\n");
+                    buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": ", (valueElementInfo.getDefaults().isEmpty() ? " " : "=" + valueElementInfo.getDefaults().get(0)), "?", "\n");
                 }
             } else if (column.isBean()) {
                 BeanElementInfo beanElementInfo = column.as(BeanElementInfo.class);
-                buf.put("UTF-8", context.indent_n(), "///", beanElementInfo.getDesc(), " ", beanElementInfo.getUsage(), "\n");
-                buf.put("UTF-8", context.indent_n(), "var ", beanElementInfo.getName(), ": ", context.getDomainsPackage(false), beanElementInfo.getJavaClass().getSimpleName(), " ?", "\n");
+                buf.putUTF8(context.indent_n(), "///", beanElementInfo.getDesc(), " ", beanElementInfo.getUsage(), "\n");
+                buf.putUTF8(context.indent_n(), "var ", beanElementInfo.getName(), ": ", context.getDomainsPackage(false), beanElementInfo.getJavaClass().getSimpleName(), " ?", "\n");
             } else if (column.isForm()) {
                 FormElementInfo formElementInfo = column.as(FormElementInfo.class);
-                buf.put("UTF-8", context.indent_n(), "///", formElementInfo.getDesc(), " ", formElementInfo.getUsage(), "\n");
-                buf.put("UTF-8", context.indent_n(), "var ", column.getName(), ": [", context.getDomainsPackage(false), formElementInfo.getBeanClass().getSimpleName(), "]?", "\n");
+                buf.putUTF8(context.indent_n(), "///", formElementInfo.getDesc(), " ", formElementInfo.getUsage(), "\n");
+                buf.putUTF8(context.indent_n(), "var ", column.getName(), ": [", context.getDomainsPackage(false), formElementInfo.getBeanClass().getSimpleName(), "]?", "\n");
             }
-            buf.put("UTF-8", "\n");
+            buf.putUTF8("\n");
         }
         if (response) {
-            buf.put("UTF-8", context.indent_n(), "required override init() {", "\n");
-            buf.put("UTF-8", context.indent_n(), "}", "\n");
-            buf.put("UTF-8", "\n");
+            buf.putUTF8(context.indent_n(), "required override init() {", "\n");
+            buf.putUTF8(context.indent_n(), "}", "\n");
+            buf.putUTF8("\n");
         }
         context.decreaseDeep();
-        buf.put("UTF-8", " }");
+        buf.putUTF8(" }");
         InterfaceFileFormat fileFormat = new InterfaceFileFormat();
         fileFormat.setFilePath(context.getDomainsFilePath());
         fileFormat.setPackagePath(context.getDomainsPackage(false));
@@ -335,59 +338,59 @@ public class SwiftInterfacePlatformCompiler implements InterfacePlatformCompiler
 
     void generateResponseClass(CompileContext context, InterfaceInfo interfaceInfo) throws FileNotFoundException {
         ByteBuf buf = ByteBuf.allocate(1024).autoExpand(true);
-        buf.put("UTF-8", "import Foundation", "\n");
-        buf.put("UTF-8", "import InterfacePlatformClientSDK", "\n");
-        buf.put("UTF-8", "\n");
-        buf.put("UTF-8", "/**", "\n");
-        buf.put("UTF-8", " *  ", context.getCopyright(),  "\n");
-        buf.put("UTF-8", " *  ", interfaceInfo.getDesc(), "\n");
-        buf.put("UTF-8", " */", "\n");
-        buf.put("UTF-8", "class ", context.getDomainsPackage(false) + interfaceInfo.getResponseClass().getSimpleName(), " : AbstractResponse {", "\n");
+        buf.putUTF8("import Foundation", "\n");
+        buf.putUTF8("import InterfacePlatformClientSDK", "\n");
+        buf.putUTF8("\n");
+        buf.putUTF8("/**", "\n");
+        buf.putUTF8(" *  ", context.getCopyright(),  "\n");
+        buf.putUTF8(" *  ", interfaceInfo.getDesc(), "\n");
+        buf.putUTF8(" */", "\n");
+        buf.putUTF8("class ", context.getDomainsPackage(false) + interfaceInfo.getResponseClass().getSimpleName(), " : AbstractResponse {", "\n");
         context.increaseDeep();
         for (ElementInfo column : interfaceInfo.getResponse().getAllElements()) {
             if (column.isValue()) {
                 ValueElementInfo valueElementInfo = column.as(ValueElementInfo.class);
-                buf.put("UTF-8", context.indent_n(), "///", valueElementInfo.isRequired() ? "必输 " : "", valueElementInfo.getDesc(), " ", StringUtils.safeToString(valueElementInfo.getUsage(), ""), " ", "\n");
+                buf.putUTF8(context.indent_n(), "///", valueElementInfo.isRequired() ? "必输 " : "", valueElementInfo.getDesc(), " ", StringUtils.safeToString(valueElementInfo.getUsage(), ""), " ", "\n");
                 if (valueElementInfo.isEnum()) {
                     for (String code : valueElementInfo.getEnums().keySet()){
-                        buf.put("UTF-8", context.indent_n(), "///", code, ":", valueElementInfo.getEnums().get(code), "\n");
+                        buf.putUTF8(context.indent_n(), "///", code, ":", valueElementInfo.getEnums().get(code), "\n");
                     }
-//                    buf.put("UTF-8", context.indent_n(), "///", valueElementInfo.getEnums().toString(), "\n");
+//                    buf.putUTF8(context.indent_n(), "///", valueElementInfo.getEnums().toString(), "\n");
                 }
                 if (valueElementInfo.getJavaClass() == Integer.TYPE || valueElementInfo.getJavaClass() == Integer.class) {
                     if (valueElementInfo.isMultiple()) {
-                        buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": [Int]?", "\n");
+                        buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": [Int]?", "\n");
                     } else {
-                        buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": Int", valueElementInfo.isRequired() ? " = 0" : " ?", "\n");
+                        buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": Int", valueElementInfo.isRequired() ? " = 0" : " ?", "\n");
                     }
                 } else if (valueElementInfo.getJavaClass() == String.class) {
                     if (valueElementInfo.isMultiple()) {
-                        buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ":  [String]?", "\n");
+                        buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ":  [String]?", "\n");
                     } else {
-                        buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": String", valueElementInfo.isRequired() ? " = \"\"" : "?", "\n");
+                        buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": String", valueElementInfo.isRequired() ? " = \"\"" : "?", "\n");
                     }
                 } else if (valueElementInfo.getJavaClass() == Boolean.TYPE || valueElementInfo.getJavaClass() == Boolean.class) {
-                    buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": Bool", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = true" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
+                    buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": Bool", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = true" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
                 } else if (valueElementInfo.getJavaClass() == Integer.TYPE || valueElementInfo.getJavaClass() == Integer.class) {
-                    buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": Int", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = 0" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
+                    buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": Int", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = 0" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
                 } else if (valueElementInfo.getJavaClass() == Long.TYPE || valueElementInfo.getJavaClass() == Long.class) {
-                    buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": Int64", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = 0" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
+                    buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": Int64", valueElementInfo.isRequired() ? (valueElementInfo.getDefaults().isEmpty() ? " = 0" : "=" + valueElementInfo.getDefaults().get(0)) : "?", "\n");
                 } else {
-                    buf.put("UTF-8", context.indent_n(), "var ", valueElementInfo.getName(), ": ", (valueElementInfo.getDefaults().isEmpty() ? " " : "=" + valueElementInfo.getDefaults().get(0)), "?", "\n");
+                    buf.putUTF8(context.indent_n(), "var ", valueElementInfo.getName(), ": ", (valueElementInfo.getDefaults().isEmpty() ? " " : "=" + valueElementInfo.getDefaults().get(0)), "?", "\n");
                 }
             } else if (column.isBean()) {
                 BeanElementInfo beanElementInfo = column.as(BeanElementInfo.class);
-                buf.put("UTF-8", context.indent_n(), "///", beanElementInfo.getDesc(), " ", beanElementInfo.getUsage(), "\n");
-                buf.put("UTF-8", context.indent_n(), "var ", beanElementInfo.getName(), ": ", context.getDomainsPackage(false), beanElementInfo.getJavaClass().getSimpleName(), " ?", "\n");
+                buf.putUTF8(context.indent_n(), "///", beanElementInfo.getDesc(), " ", beanElementInfo.getUsage(), "\n");
+                buf.putUTF8(context.indent_n(), "var ", beanElementInfo.getName(), ": ", context.getDomainsPackage(false), beanElementInfo.getJavaClass().getSimpleName(), " ?", "\n");
             } else if (column.isForm()) {
                 FormElementInfo formElementInfo = column.as(FormElementInfo.class);
-                buf.put("UTF-8", context.indent_n(), "///", formElementInfo.getDesc(), " ", formElementInfo.getUsage(), "\n");
-                buf.put("UTF-8", context.indent_n(), "var ", column.getName(), ": [", context.getDomainsPackage(false), formElementInfo.getBeanClass().getSimpleName(), "]?", "\n");
+                buf.putUTF8(context.indent_n(), "///", formElementInfo.getDesc(), " ", formElementInfo.getUsage(), "\n");
+                buf.putUTF8(context.indent_n(), "var ", column.getName(), ": [", context.getDomainsPackage(false), formElementInfo.getBeanClass().getSimpleName(), "]?", "\n");
             }
-            buf.put("UTF-8", "\n");
+            buf.putUTF8("\n");
         }
         context.decreaseDeep();
-        buf.put("UTF-8", "}");
+        buf.putUTF8("}");
         InterfaceFileFormat fileFormat = new InterfaceFileFormat();
         fileFormat.setFilePath(context.getDomainsFilePath());
         fileFormat.setPackagePath(context.getDomainsPackage(false));

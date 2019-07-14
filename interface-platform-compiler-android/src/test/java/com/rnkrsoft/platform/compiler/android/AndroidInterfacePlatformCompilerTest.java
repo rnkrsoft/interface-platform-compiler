@@ -3,13 +3,10 @@ package com.rnkrsoft.platform.compiler.android;
 import com.rnkrsoft.platform.compiler.CompileContext;
 import com.rnkrsoft.platform.compiler.InterfacePlatformCompiler;
 import com.rnkrsoft.platform.compiler.InterfaceScanner;
-import com.rnkrsoft.platform.generator.DeviceType;
-import com.rnkrsoft.platform.generator.InterfacePlatformGenerator;
+import com.rnkrsoft.platform.compiler.DeviceType;
 import org.junit.Test;
 
 import javax.web.doc.DocScanner;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by rnkrsoft.com on 2019/2/3.
@@ -30,11 +27,5 @@ public class AndroidInterfacePlatformCompilerTest {
         ctx.setPackZip(true);
         compiler.compile(ctx);
         System.out.println(ctx.getFileFormats());
-    }
-    @Test
-    public void testCompile1() throws Exception {
-        String[] serviceClasses = new String[]{};
-        InterfacePlatformGenerator.generate(DeviceType.Android, "com.rnkrsoft.demo", "./target", "com.rnkrsoft.platform.service", serviceClasses);
-
     }
 }

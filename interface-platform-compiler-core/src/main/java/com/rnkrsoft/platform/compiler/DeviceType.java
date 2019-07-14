@@ -1,16 +1,12 @@
-package com.rnkrsoft.platform.generator;
+package com.rnkrsoft.platform.compiler;
 
 import com.rnkrsoft.interfaces.EnumStringCode;
 
-@Deprecated
 public enum DeviceType implements EnumStringCode {
-    @Deprecated
-    iOS("iOS", "苹果手机"),
-    @Deprecated
+    Swift("swift", "苹果手机"),
     Android("Android", "安卓手机"),
-    @Deprecated
+    AndroidInner("AndroidInner", "安卓手机内部类"),
     Java("Java", "Java"),
-    @Deprecated
     JavaScript("JavaScript", "JavaScript");
 
     String code;

@@ -3,8 +3,6 @@ package com.rnkrsoft.platform.compiler.swift;
 import com.rnkrsoft.platform.compiler.CompileContext;
 import com.rnkrsoft.platform.compiler.InterfacePlatformCompiler;
 import com.rnkrsoft.platform.compiler.InterfaceScanner;
-import com.rnkrsoft.platform.generator.DeviceType;
-import com.rnkrsoft.platform.generator.InterfacePlatformGenerator;
 import org.junit.Test;
 
 import javax.web.doc.DocScanner;
@@ -32,12 +30,4 @@ public class SwiftInterfacePlatformCompilerTest {
         System.out.println(ctx.getFileFormats());
     }
 
-    @Test
-    public void testCompile1() throws Exception {
-        String[] serviceClasses = new String[]{
-                "com.rnkrsoft.platform.service.DemoService",
-        };
-        InterfacePlatformGenerator.generate(DeviceType.Android, "com.rnkrsoft.demo", "./target", "com.rnkrsoft.platform.service", serviceClasses);
-
-    }
 }

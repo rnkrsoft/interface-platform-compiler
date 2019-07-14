@@ -1,3 +1,4 @@
 com.rnkrsoft.platform.compiler.android.AndroidInterfacePlatformCompiler
+com.rnkrsoft.platform.compiler.android.AndroidInnerClassInterfacePlatformCompiler
 com.rnkrsoft.platform.compiler.java.JavaInterfacePlatformCompiler
 com.rnkrsoft.platform.compiler.swift.SwiftInterfacePlatformCompiler
