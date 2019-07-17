@@ -36,7 +36,7 @@ public class InterfacePlatformSQLGenerator {
     }
 
     static String generateInterfaceSQL(InterfaceInfo interfaceInfo) {
-        String format = "insert  into tb_interface_definition" +
+        String format = "insert into tb_interface_definition" +
                 //0,1,2
                 "(serial_no," +
                 //3
@@ -105,7 +105,7 @@ public class InterfacePlatformSQLGenerator {
                 //9
                 "'{}'," +
                 //10
-                "'{}'," +
+                "{}," +
                 //11
                 "'{}'," +
                 //12
@@ -153,7 +153,7 @@ public class InterfacePlatformSQLGenerator {
         args[9] = "";
         args[10] = "20";
         args[11] = interfaceInfo.getServiceInfo().getServiceClassName();
-        args[12] = interfaceInfo.getName();
+        args[12] = interfaceInfo.getMethodName();
         args[13] = "AES";
         args[14] = "AES";
         args[15] = "SHA512";

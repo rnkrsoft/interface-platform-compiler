@@ -155,7 +155,7 @@ public class SwiftInterfacePlatformCompiler implements InterfacePlatformCompiler
             } else if (column.isBean()) {
                 BeanElementInfo beanElementInfo = column.as(BeanElementInfo.class);
                 buf.putUTF8(context.indent_n(), "///", beanElementInfo.getDesc(), " ", beanElementInfo.getUsage(), "\n");
-                buf.putUTF8(context.indent_n(), "var ", beanElementInfo.getName(), ": ", context.getDomainsPackage(false), beanElementInfo.getJavaClass().getSimpleName(), " ?", "\n");
+                buf.putUTF8(context.indent_n(), "var ", beanElementInfo.getName(), ": ", context.getDomainsPackage(false), beanElementInfo.getJavaClass().getSimpleName(), "?", "\n");
             } else if (column.isForm()) {
                 FormElementInfo formElementInfo = column.as(FormElementInfo.class);
                 buf.putUTF8(context.indent_n(), "///", formElementInfo.getDesc(), " ", formElementInfo.getUsage(), "\n");
@@ -227,7 +227,7 @@ public class SwiftInterfacePlatformCompiler implements InterfacePlatformCompiler
             } else if (column.isBean()) {
                 BeanElementInfo beanElementInfo = column.as(BeanElementInfo.class);
                 buf.putUTF8(context.indent_n(), "///", beanElementInfo.getDesc(), " ", beanElementInfo.getUsage(), "\n");
-                buf.putUTF8(context.indent_n(), "var ", beanElementInfo.getName(), ": ", context.getDomainsPackage(false), beanElementInfo.getJavaClass().getSimpleName(), " ?", "\n");
+                buf.putUTF8(context.indent_n(), "var ", beanElementInfo.getName(), ": ", context.getDomainsPackage(false), beanElementInfo.getJavaClass().getSimpleName(), "?", "\n");
             } else if (column.isForm()) {
                 FormElementInfo formElementInfo = column.as(FormElementInfo.class);
                 buf.putUTF8(context.indent_n(), "///", formElementInfo.getDesc(), " ", formElementInfo.getUsage(), "\n");
@@ -304,7 +304,7 @@ public class SwiftInterfacePlatformCompiler implements InterfacePlatformCompiler
             } else if (column.isBean()) {
                 BeanElementInfo beanElementInfo = column.as(BeanElementInfo.class);
                 buf.putUTF8(context.indent_n(), "///", beanElementInfo.getDesc(), " ", beanElementInfo.getUsage(), "\n");
-                buf.putUTF8(context.indent_n(), "var ", beanElementInfo.getName(), ": ", context.getDomainsPackage(false), beanElementInfo.getJavaClass().getSimpleName(), " ?", "\n");
+                buf.putUTF8(context.indent_n(), "var ", beanElementInfo.getName(), ": ", context.getDomainsPackage(false), beanElementInfo.getJavaClass().getSimpleName(), "?", "\n");
             } else if (column.isForm()) {
                 FormElementInfo formElementInfo = column.as(FormElementInfo.class);
                 buf.putUTF8(context.indent_n(), "///", formElementInfo.getDesc(), " ", formElementInfo.getUsage(), "\n");
@@ -381,7 +381,7 @@ public class SwiftInterfacePlatformCompiler implements InterfacePlatformCompiler
             } else if (column.isBean()) {
                 BeanElementInfo beanElementInfo = column.as(BeanElementInfo.class);
                 buf.putUTF8(context.indent_n(), "///", beanElementInfo.getDesc(), " ", beanElementInfo.getUsage(), "\n");
-                buf.putUTF8(context.indent_n(), "var ", beanElementInfo.getName(), ": ", context.getDomainsPackage(false), beanElementInfo.getJavaClass().getSimpleName(), " ?", "\n");
+                buf.putUTF8(context.indent_n(), "var ", beanElementInfo.getName(), ": ", context.getDomainsPackage(false), beanElementInfo.getJavaClass().getSimpleName(), "?", "\n");
             } else if (column.isForm()) {
                 FormElementInfo formElementInfo = column.as(FormElementInfo.class);
                 buf.putUTF8(context.indent_n(), "///", formElementInfo.getDesc(), " ", formElementInfo.getUsage(), "\n");
