@@ -3,7 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.rnkrsoft.platform</groupId>
     <artifactId>interface-platform-compiler</artifactId>
     <version>1.0.3</version>
@@ -12,13 +11,13 @@
     <url>https://github.com/rnkrsoft/interface-platform-compiler.git</url>
     <licenses>
         <license>
-            <name>GNU GENERAL PUBLIC LICENSE Version 2</name>
-            <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
     <scm>
-        <connection>https://github.com/rnkrsoft/interface-platform.git</connection>
-        <developerConnection>https://github.com/rnkrsoft/interface-platform.git</developerConnection>
+        <connection>https://github.com/rnkrsoft/interface-platform-compiler.git</connection>
+        <developerConnection>https://github.com/rnkrsoft/interface-platform-compiler.git</developerConnection>
         <url>https://www.rnkrsoft.com</url>
     </scm>
     <dependencies>
@@ -27,6 +26,52 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.skeleton4j</groupId>
+            <artifactId>skeleton4j-api</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.platform</groupId>
+            <artifactId>interface-platform-client4j-sdk</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.skeleton4j</groupId>
+            <artifactId>skeleton4j-doc</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.io4j</groupId>
+            <artifactId>io4j</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.groundwork</groupId>
+            <artifactId>groundwork</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.reflection4j</groupId>
+            <artifactId>reflection4j</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.logtrace4j</groupId>
+            <artifactId>logtrace4j</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.logger4j</groupId>
+            <artifactId>logger4j</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.platform</groupId>
@@ -131,7 +176,7 @@
     </build>
     <profiles>
         <profile>
-            <id>sso</id>
+            <id>release</id>
             <build>
                 <plugins>
                     <!-- Javadoc -->
